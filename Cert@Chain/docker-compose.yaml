@@ -1,0 +1,84 @@
+version: '2.0'
+
+services: 
+  certificate_client:
+    container_name: certificate-client
+    build:
+      context: .
+      dockerfile: client/Dockerfile
+      args:
+        - http_proxy
+        - https_proxy
+        - no_proxy 
+    expose:
+      - 3000
+    ports:
+      - 3000:3000
+    volumes:
+      - '.:/project/certificate'
+
+  certificate_processor:
+    container_name: certificate-processor
+    build:
+      context: .
+      dockerfile: ./processor/DockerFile
+      args:
+        - http_proxy
+        - https_proxy
+        - no_proxy
+    depends_on:
+        - validator
+    volumes:
+        - '.:/project/certificate'
+
+  certificate_event:
+    container_name: certificate_event
+    build:
+      context: .
+      dockerfile: event/Dockerfile
+    depends_on:
+        - validator
+    volumes:
+        - '.:/project/certificate'
+      
+
+  sawtooth-rest-api:
+    container_name: rest-api
+    image: hyperledger/sawtooth-rest-api:1.0
+    expose:
+      - 8008
+    ports:
+      - '8008:8008'
+    depends_on:
+      - validator
+    entrypoint: |
+      sawtooth-rest-api -vvv
+        --connect tcp://validator:4004
+        --bind sawtooth-rest-api:8008
+      
+  settings-tp:
+    image: hyperledger/sawtooth-settings-tp:1.0
+    depends_on:
+      - validator
+    command: settings-tp -vv --connect tcp://validator:4004
+
+  validator:
+    container_name: validator
+    image: hyperledger/sawtooth-validator:1.0
+    expose:
+      - 4004
+    ports:
+      - '4004:4004'
+    command: |
+      bash -c "
+        if [ ! -f /etc/sawtooth/keys/validator.priv ]; then
+        sawadm keygen &&
+        sawtooth keygen my_key &&
+        sawset genesis -k /root/.sawtooth/keys/my_key.priv &&
+        sawadm genesis config-genesis.batch
+        fi;
+        sawtooth-validator -vvv \
+          --endpoint tcp://validator:8800 \
+          --bind component:tcp://eth0:4004 \
+          --bind network:tcp://eth0:8800
+      "

@@ -1,0 +1,23 @@
+{
+  "name": "certificateclient",
+  "version": "0.0.0",
+  "private": true,
+  "scripts": {
+    "start": "node ./bin/www"
+  },
+  "dependencies": {
+    "babel": "^6.23.0",
+    "cookie-parser": "~1.4.3",
+    "debug": "~2.6.9",
+    "express": "~4.16.0",
+    "express-handlebars": "^3.0.2",
+    "hbs": "~4.0.1",
+    "http-errors": "~1.6.2",
+    "jade": "~1.11.0",
+    "morgan": "~1.9.0",
+    "node-fetch": "^2.6.0",
+    "sawtooth-sdk": "^1.0.5",
+    "text-encoder": "0.0.4",
+    "text-encoding": "^0.7.0"
+  }
+}
