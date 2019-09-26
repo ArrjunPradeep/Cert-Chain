@@ -190,6 +190,6 @@
 
 
 
-##### Created by: 
+##### Created by: M Arjun Pradeep
 ###### Github: Arjun-Pradeep
-###### GitLab: @M_Arjun_Pradeep
+###### GitLab: M_Arjun_Pradeep
