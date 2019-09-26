@@ -48,10 +48,10 @@
     background-position-y: -37px;
 }
 
-/* .b1{
+.b1{
     background-image: url(../images/bg1.jpg);
-    background-color: green;
-} */
+    /* background-color: green; */
+}
 
 .f1{
     color: gold;
